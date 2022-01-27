@@ -1,0 +1,26 @@
+!BECKHOFF CONFIG
+
+AUTOEXEC:
+ECUNMAP ! Reset all previous mapping defined
+
+!E_TYPE(0)=4
+!E_TYPE(1)=4
+
+ECIN(370, EL1889(0))! DIGITAL INPUT (24v, 16ch)
+ECIN(371, EL1889(1))
+
+
+ECOUT(356, EL2889(0))!  DIGITAL OUTPUT (24v, 16ch)
+ECOUT(357, EL2889(1))
+
+
+EL2889(0).1 = 1
+
+!ECRESCUE  --> excute variable
+STOP
+
+
+!ON ^PST(11).#RUN
+!START 11,1;
+!DISP" RESTART BUFFER 11"
+!RET

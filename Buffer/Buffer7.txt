@@ -1,0 +1,103 @@
+!--------------------- variable define
+INT X, Y, Z, MOVE_CNT
+
+REAL START_X, START_Y, START_Z
+GLOBAL REAL X_POS_ARRAY(5), Y_POS_ARRAY(5), RD(5)
+GLOBAL REAL G_SIZE(2)
+GLOBAL REAL G_USE_AXIS(3)
+GLOBAL REAL G_START_POS(3), G_START_VEL(3)
+GLOBAL REAL G_END_POS(3), G_END_VEL(3), G_END_OFFSET(2)
+
+GLOBAL REAL G_CRACK_POS(3), G_CRACK_VEL(3)
+GLOBAL REAL G_RD(4)
+GLOBAL REAL G_COMP_X(4), G_COMP_Y(4)
+GLOBAL REAL G_XSEG_VEL, G_XSEG_ACC;
+GLOBAL INT G_START_SIG(5)
+GLOBAL INT G_STEP_NUM
+
+REAL TMP_END_X, TMP_END_Y;
+! AXIS Number Degine
+X = 0;!G_USE_AXIS(0);
+Y = 1!G_USE_AXIS(1);
+Z = 4!G_USE_AXIS(2); ! axis is 4
+
+
+MOVE_CNT = 1
+
+
+
+ENABLE (X,Y)
+
+! Radius Range Error Check
+!IF RADIUS > (X_MOVE_DISTANCE/2) |RADIUS > (Y_MOVE_DISTANCE/2)
+!	DISP"Rounding Radius must be smaller than (X/Y Length)/2"
+!	STOP
+!ELSE
+!END
+G_STEP_NUM = 0
+G_START_SIG(0) = 0
+!----------------------------------- STEP-1 : start pos move (x,y)
+START_X = G_START_POS(0)
+START_Y = G_START_POS(1)
+
+
+VEL(X) = G_START_VEL(0)
+ACC(X) = 30000
+DEC(X) = 30000
+JERK(X) = 50000
+
+VEL(Y) = G_START_VEL(1)
+ACC(Y) = 30000
+DEC(Y) = 30000
+JERK(Y) = 50000
+PTP/E (X,Y), START_X-20, START_Y
+
+!----------------------------------- STEP-2 : XSeg Start 
+! Segment Velocity set
+ 
+VEL(X) = G_XSEG_VEL
+ACC(X) = G_XSEG_ACC
+DEC(X) = G_XSEG_ACC
+JERK(X) = G_XSEG_ACC*10
+
+VEL(Y) = G_XSEG_VEL 
+ACC(Y) = G_XSEG_ACC
+DEC(Y) = G_XSEG_ACC
+JERK(Y) = G_XSEG_ACC*10
+G_START_SIG(0) = 1; !------------------- LASER START
+
+
+PTP/E (X,Y), START_X-10, START_Y
+PTP/E (X,Y), START_X, START_Y
+G_START_SIG(0) = 1; !------------------- LASER START
+G_STEP_NUM = 100
+TMP_END_X = G_COMP_X(0)+G_END_OFFSET(0);
+TMP_END_Y = G_COMP_Y(0)-G_END_OFFSET(1);
+ ! Segment Start
+ 
+ ! LINE (X,Y), START_X, START_Y
+LOOP MOVE_CNT 
+	
+	XSEG/v (X,Y), START_X, START_Y, G_XSEG_VEL	! step-1 ( start pos move (x,y), xseg-velocity
+		LINE(X,Y), G_COMP_X(0), G_COMP_Y(0)					! step-2
+		LINE(X,Y), G_COMP_X(1), G_COMP_Y(0)					! step-3----1
+		ARC2(X,Y), G_COMP_X(1), G_COMP_Y(1), ACOS(-1)/2		! step-4
+		LINE(X,Y), G_COMP_X(2), G_COMP_Y(2)					! step-5----2
+		ARC2(X,Y), G_COMP_X(1), G_COMP_Y(2), ACOS(-1)/2		! step-6
+		LINE(X,Y), G_COMP_X(0), G_COMP_Y(3)					! step-7----3
+		ARC2(X,Y), G_COMP_X(0), G_COMP_Y(2), ACOS(-1)/2		! step-8
+		LINE(X,Y), G_COMP_X(3), G_COMP_Y(1)					! step-9----4
+		ARC2(X,Y), G_COMP_X(0), G_COMP_Y(1), ACOS(-1)/2		! step-10
+		LINE(X,Y), TMP_END_X, TMP_END_Y				! step-11 ( end pos.. move
+		LINE(X,Y), G_END_POS(0), G_END_POS(1)				! step-11 ( end pos.. move
+	ENDS(X,Y)
+ 
+  TILL GSEG(X) = -1
+END !loop end
+ 
+G_START_SIG(0) = 0;!------------------- LASER END
+G_STEP_NUM = 0
+Wait 1000
+ 
+STOP
+ 
