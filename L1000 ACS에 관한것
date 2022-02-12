@@ -1,0 +1,9 @@
+L1000 ACS에 관한것\
+
+
+XSEG/v\
+  LINE\
+  ARC2\
+  LINE\
+  
+  이렇게 있으면 LINE/v로 속도를 지정할 수 있고 XSEG안에  정의된 LINE/v함수 다음에 명령어들의 속도는 XSEG에서 지정된 속도가 아니라 LINE/v에서 지정된 속도이다.
