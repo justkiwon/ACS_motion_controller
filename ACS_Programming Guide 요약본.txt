@@ -21,15 +21,21 @@ p78) SET 축_VAR=expression --> SET 명령은 마스터 위치의 현재 값을 
      ex) SET FPOS(0) =0 --> 이 순간 모터의 위치 지점에 0축의 원점을 놓는다
           SET F2POS(0) = 0 --> 모터가 현재 위치한 지점에 0축이 두번째 피드백 지점을 원점으로 놓는다
 p84) IMM motion_var = command --> 진행 모션과 대기중인 모션에도 영향을 미친다, motion_var = VEL:속도, ACC:가속도, DEC:감속도, JERK:jerk, KDEC:감속도를 줄인다
-p85) PTP[/switch]axis_designation,target_point[,velocity] --> point to point 위치 설정, switch= 옵션으로 e: 다음명령 실행 전 모션 종료, v: 기본 속도 대신 지정된 속도 사용
+p85) PTP[/switch]axis_designation,target_point[,velocity] --> point to point 위치 설정, 
+								switch= 옵션으로 
+								e: 다음명령 실행 전 모션 종료, 
+								v: 기본 속도 대신 지정된 속도 사용
        ex) PTP 0,1000 0축이 1000까지 모션 이동  PTP/e 2,1000 == PTP 2,1000 \ TILL ^AST(1). --> 모션이 1000까지 갈 때 까지 기다림
+       
 p88)  MPTP --> 모르겠음 
 p99) JOG = 모터를 구동함에 있어서 본격적으로 움직이기 위해 준비운동처럼 조금씩 원하는 위치까지 이동시키는 모드
        JOG[/스위치] axis_designator [,direction][,velocity] --> /스위치=(w:모션생성하되 go 명령이 내려지기 전까지 시작금지) (v:기본속도 대신 명령에 지정된 속도를 사용), 
                         axis_designator = 축 이름, direction= +,-(방향) , velocity(속도)
-       ex) JOG 0 --> 기본속도로 양의 방향으로 0축의 조그 동작 실행 , JOG/V 0,30 --> 기본 속도 무시하고 30속도로 조그 모션 생성 , JOG (0,1,4), -++ --> 0축은 음, 1축은 양, 4축은 양의 방향으로 조그 진행
+			
+     ex) JOG 0 --> 기본속도로 양의 방향으로 0축의 조그 동작 실행 , JOG/V 0,30 --> 기본 속도 무시하고 30속도로 조그 모션 생성 , JOG (0,1,4), -++ --> 0축은 음, 1축은 양, 4축은 양의 방향으          로 조그 진행
 p100) TRACK[/w] axis_designator --> 목표 위치가 다음과 같을 때 자동으로 이동을생성해 처리량을 향상시킴  -- 잘 모르겠음 다시 읽기 바람
          [/w] = go명령이 시작될 때 까지 기다린다, TRACK 0 --> 0축의 트랙 모션 생성
+	 
 p103)분할 모션 Segmented Motion --> 연속 경로를 따라 축을 이동    S=F(T) --> S: 분할 된 경로에 따른 거리, F: 함수 독립, T: 시간 if F y(s) == XY 평면에서 경로 모양 만듬
 
 p104) MESG[/switch] axis_group, final_point [, initial_start_point, initial_start_point][, projection matrix_designator]
@@ -51,6 +57,7 @@ p105)  밑의 명령어들은 세그먼트 명령어들이다. 그래서 명령�
         LINE (0,1), -1000, -1000 -->현재 지점부터 끝점(-1000,-1000)으로 라인을 그리는 세그먼트
         ARC2 (0,1), -1000,0,-3.141529  --> 중심이 있는 호 세그먼트 추가, (-1000,0) 및 회전 각도(파이 라디안)    --> 따라서 ARC2는 중심점 좌표, 회전각도(라디안) 필요
         ENDS (0,1) --> 세그먼트 시퀀스 종료
+	
 p107) projection command -- 잘 모르겠음
 p110) STOPPER  --> 변곡점에서 속도 점프가 나는 것을 방지하는데 사용   ex) STOPPER(0,1)
 p112) Corner Processing  --> 코너처리는 코너의 자동 감지 및 속도 계산이 포함되어 가속 및 저크 제한을 초과하지 않고 코너를 통과한다.
