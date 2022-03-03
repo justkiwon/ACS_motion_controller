@@ -38,7 +38,11 @@ p104) MESG[/switch] axis_group, final_point [, initial_start_point, initial_star
         ARC2[/switch] axis_group, center_point, rotation_angle, rotation_direction [, velocity]
         STOPPER axis_group
         ENDS axis_group
-       [/switch] 옵션 --> w: go명령이 나올 때까지 시작 금지, V:지정된 속도 사용, C: 세그먼트 시퀀스를 순환 배열로 사용(반복같은거?), S: 슬레이브 모션 - 리딩의 마스터 값에 따라 모션 진행, P:위치 고정, 마스터 값을 엄격히 준수, e,t
+       [/switch] 옵션 --> w: go명령이 나올 때까지 시작 금지, 
+			  V:지정된 속도 사용, 
+			  C: 세그먼트 시퀀스를 순환 배열로 사용(반복같은거?), 
+			  S: 슬레이브 모션 - 리딩의 마스터 값에 따라 모션 진행, 
+			  P:위치 고정, 마스터 값을 엄격히 준수, e,t
  
 p105)  밑의 명령어들은 세그먼트 명령어들이다. 그래서 명령어 끝난 시점의 점을 기준을 시작으로 다음 명령어가 계속해서 움직이게 된다.
         MESG (0,1), 1000, 1000 --> MESG명령은 축 그룹과 초기 시작점을 지정한다.  0,1축 초기좌표 포인트는 1000,1000이다.
