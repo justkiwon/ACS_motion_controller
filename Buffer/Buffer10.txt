@@ -1,8 +1,0 @@
-GLOBAL INT G_EL_OUT(2)
-AUTOEXEC:
-!ECUNMAP ! Reset all previous mapping defined
-
-EL2889(0) = G_EL_OUT(0)
-EL2889(1) = G_EL_OUT(1)
-
-stop
