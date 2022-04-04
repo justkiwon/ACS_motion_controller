@@ -1,0 +1,377 @@
+SPiiPlus .NET Library Programmer's Guide
+
+공학에서의 offset = 목표값에서 벗어난 정도
+                      = 자동 제어계가 정상적으로 안정화 된 다음 잔류하는 제어량과 목표값의 편차
+                      = index와 비슷하다해도 무방 
+
+p28) ACSC_PCI_SLOT ==> PCI 카드의 물리적 위치를 정함
+      ACSC_CONNECTION_INFO ==> 응용 프로그램에 대해 지정된 컨트롤러 연결에 대한 정보 제공
+p31) 통신 설정
+
+p32) 3.1.8 연결 목록 가죠오기   --> 현재 열려있는 모든 연결과 해ㅏㅇ 세부 정보를 검색한다.
+       object.GetConnectionsList()
+       
+       3.1.9 GetEthernetCards(IPAddress broadcast)  --> 브로드캐스트, 일반적으로 ipadress.Broadcast이어야 한다. 
+
+p35) 3.1.12 OpenCommEthernetTCP --> TCP 프로토콜을 사용해 이더넷을 통해 컨트롤러와 통신을 연다.
+        object.OpenCommEthernetTCP(string address, int port) - address = 컨트롤러의 TCP네트워크 주소
+                                                                                port - 서비스 포트
+
+      3.1.13 OpenCommEthernetUDP --> UDP프로토콜을 사용해 이더넷을 통해 컨트롤러와의 통신을 연다.
+        object.OpenCommEthernetUDP(string adress, int port)
+
+p39) Ether CAT
+
+p55) 3.4 ACSPL+ 프로그램 관리 방법
+
+p58) D-buffer를 컴파일 하게 되면 모든 버퍼 중지
+
+p60) 3.4.6) 실행 버퍼 RunBuffer 
+               - object.RunBuffer(ProgramBuffer buffer, [string label])
+
+p61) StopBuffer -ACSPL+의 프로그램 실행을 중지한다.
+               - object.StopBuffer(ProgramBuffer buffer) --buffer는 버퍼 숫자 기입
+               - 모든 버퍼를 정지하기 위해서는 ACS_NONE을 기입
+
+p63) 3.5 변수 읽기 및 쓰기 방법   노영훈가 땡수현씨를 간곡히 찾고 있음 아름다운가게에서 체육관 봉사를 함 인천대 간호학과를 가고 여고를 나왔고 우리랑 동갑임
+      3.5.1 ReadVariable 
+               - object.ReadVariable(string variable, [ProgramBuffer nBuf], [int from1], [int to1], [int from2], [int to2])
+               -                       컨트롤러 변수 이름, 지역 변수에 대한 프로그램 버퍼수, 인덱스 범위, 인덱스 범위, 인덱스 범위, 인덱스 범위
+               - 만약 프로그램 버퍼 수가 지역이 아니라 전역 및 ACSPL+ 변수라면 'ProgramBuffer.ACSC_NONE' or nBuf를 생략하거나 ProgramBuffer.ACSC_NONE(-1)으로 지정
+               - from 1,to1과 2, to 2의 기본값은  'API.ACSC_NONE'
+               -컨트롤러에서 변수를 읽어 객체 형태로 반환
+p64)       readvariable에서 인덱스를 지정하는 방법
+	1. 전체 변수 읽기 = from,to매게변수 생략 or api.ACSC_NONE으로 지정
+            2. 벡터에서 하나요소 읽기 from1 = to1 이고 하나의 요소 인덱스 지정, from2 및 to2는 생략하거나 api.acsc_none으로 지정
+           
+
+p67)  3.5.2 ReadVariableAsScalar
+               - 변수를 읽어 스칼라로 반환
+               - object.ReadVariableAsScalar(문자열 변수, ProgramBuffer nBuf, [int ind1], [int ind2])
+
+p69)  3.5.3 ReadVariableAsVector 
+               - 변수를 읽어 벡터로 반환
+               - object.ReadVariableAsVector(문자열 변수, [ProgramBuffer nBuf], [int from1], [int to1], [int from2], [int to2])
+
+p72) 3.5.4 ReadVariableAsMatrix
+               - 변수를 읽어 행렬로 반환
+               - object.ReadVariableAsMatrix(문자열 변수, [ProgramBuffer nBuf], [int from1], [intto1], [int from2], [int to2])
+
+p75) 3.5.5 WriteVariable 
+               - 변수에 개체로 정의된 값을 쓴다
+               - object.WriteVariable(object value, string variable, [ProgramBuffer nBuf], [int from1],[int to1], [int from2], [int to2])
+                                      정수 또는 실수, 변수, 지역번수에 대한 버퍼수, 변수 0부터 시작하는 인덱스 범위, 2차원 인덱스 범위
+               - 지역 변수가 아님 전역 변수로 사용하면 nBuf를 생략하거나 ProgramBuffer.ACS_NONE(-1)로 지정
+
+p80) History Buffer Management Methods -앞에 object. 을 붙여서 사용
+                - OpenHistoryBuffer
+                - CloseHistoryBuffer
+                - GetHistory
+
+p84) Log File Management Methods   - 그러나 우리 모션 컨트롤러가 SPiiPlusSC인지 아닌지 모르겠으나 SC에서만 사용 가능
+                - OpenLogFile
+                - CloseLogFile
+                - WriteSCLogFile  --> 로그 파일 작성
+                - FlushLogFile     --> 파일에 로그를 플러시한다.
+
+p90)  공유 메모리 방법 --> 이것도 SC만 가능
+
+p92) 시스템 구성 방법
+
+p98)  3.12 모션 매개변수 방법 설정 및 읽기
+//_______________________________________________________속도____________________________________________________________________________
+
+p99) SetVelocity --> 모션 속도 값을 정의한다.
+                - object.SetVelocity(Axis axis, double velocity)
+                - 축 설정: ACSC_AXIS_0 = 0번 축,      ACSC_AXIS_1 = 1번 축
+                -    ex)  ch.SetVelocity(Axis.ACS_AXIS_0, velocity);                 비동기는 그냥 무조건 마지막에 Async 사용
+
+p100) 3.12.2  SetVelocitylmm  --> 실행되거나 계획된 모든 동작의 속도 값을 정의
+                  - object.SetVelocitylmm(Axis axis, double velocity)
+                  - 예시나 축 설정은 위와 동일
+
+p101)  3.12.3 GetVelocity   --> 현재 모션의 속도 값을 검색한다.
+                  - object.GetVelocity(Axis axis)
+                  - 축 상수는 위와 동일 
+//________________________________________________________ 가속도 _____________________________________________________________________
+p102) 3.12.4  가속도 -> 위의 속도 와 동일
+                 - SetAcceleration       --> 모션 가속 설정
+                 - SetAccelerationlmm  --> 위의 속도 lmm과 동일
+                 - GetAcceleration       --> 가속도 값 검색
+//_______________________________________________________ 감속도 ______________________________________________________________________
+p104) 3.12.7  감속도도 속도와 동일
+                 - SetDeceleration       --> 모션 감속 값 정의
+                 - SetDecelerationlmm  --> 실시간 감속 값 변경
+                 - GetDeceleration       --> 모션 감속 값 검색
+//________________________________________________________ Jerk _______________________________________________________________________
+p107) 3.12.10 가가속도도 속도와 동일
+                 - SetJerk                  --> 저크 값 정의
+                 - SetJerklmm            --> 실시간 저크 값 정의
+                 -GetJerk                  --> 모션 저크 값 검색
+//________________________________________________________ kill deceleration ___________________________________________________________
+p109) 3.12.13 속도와 동일
+                 - SetKillDeceleration       --> 모션 킬 감속값 정의
+                 - SetKillDecelerationlmm  --> 실시간 킬 감속값 정의
+                 - GetKillDeceleration       --> 모션 킬 감속값 검색
+
+p111) 3.12.16 SetFPosition  --> 피드백 위치의 현재 값 할당
+                 -object.SetFPosition(Axis.axis, double fPosition)
+                 -축 정의는 언제나 똑같음
+                 - 물리적인 움직임 발생 X, 피드백 위치만 준다
+
+p112) 3.12.17 GetFPosition  --> 모터 피드백 위치의 현재 값 검색
+                  - object.GetFPosition(Axis.axis)
+
+p113) 3.12.18 SetRPosition   --> 기준 위치의 현재 값을 할당
+                  - object.SetRPosition(Axis.axis, double rPosition)
+                  - 물리적인 움직임 발생 X, 내부 컨트롤러 오프셋만 조정
+
+p113) 3.12.19 GetRPPosition
+                  - object.GetRPosition(Axis.axis)
+                  - 모터 기준 위치의 순간 값을 검색한다.
+                  - 기준 위치는 컨트롤러가 모터에 대한 기준으로 계산한 값
+
+        3.12.20 GetF Velocity
+                  - object.GetFVelocity(Axis.axis)
+                  - 모터의 피드백 속도의 순간 값 검색
+                  - GetVelocity와 다르게 필요값이 아닌 실제로 측정된 속도를 검색
+
+p115) 3.12.21 GetRVelocity
+                  - 모터 기준 순간 값 검색
+                  - object.GetRVelocity(Axis.axis)
+
+p116~123) 3.13   AXIS/MOTER Management Methods
+                  - 모터 정류, 축 활성화, 축 차단, 축 끄기, 좌표계 생성, 분할
+
+p123) 3.14   Motion Management Methods
+
+p124) 3.14.1 Go --> 지정된 모션 큐에서 대기중인 모션을 시작한다.
+                  - object.Go(Axis.axis)
+                  - 지정된 축의 모션 대기열에서 모션 대기를 시작하고 대기하지 않으면 메서드가 적용되지 않는다.  따라서 모션 대기를 꼭 해야하는거같음
+                  - ex) ch.WaitMoterEnabled(Axis.ACSC_AXIS_0,1,5000);                       // // Wait till axis 0 is enabled during 5 sec
+                         ch.ToPoint (MotionFlags.ACSC_AMF_WAIT,Axis.ACSC_AXIS_0,10000); // wait till go command executed on axis 0, target position of 10000
+                         chGo (Axis.ACSC_AXIS_0);        //Motion start
+
+p125) 3.14.2 GoM             --> 지정된 모션에서 대기중인 여러 모션을 동기적으로 시작한다.
+                 - object.GoM(Axis[] axes)
+                 - 종료되고 대기중인 모션들도 폐기되고 실행되지 않는다.  
+
+p126) 3.14.3 Halt              --> 전체 감속 프로파일을 사용해 모션을 종료한다.
+                 - object.Halt(Axis.axis)
+                 - 종료되고 대기중인 모션들도 폐기되고 실행되지 않는다.  
+
+p127) 3.14.4 HaltM           --> 전체 감속 프로파일을 사용해 여러 동작 종료
+	     - object.HaltM(Axis[].axis)
+                 - 종료되고 대기중인 모션들도 폐기되고 실행되지 않는다.  
+
+p128) 3.14.5 Kill               --> 감소된 프로파일을 사용해 모션을 종료
+                 - object.Kill(Axis.axis)
+                 - 종료되고 대기중인 모션들도 폐기되고 실행되지 않는다.  
+
+p129) 3.14.6 Kill All
+                 - object.KillAll( )
+                 - 현재 실행중인 모든 동작을 종료한다.
+p130) 3.14.7 KillM
+                 - object.KillM(Axis[] axes)
+                 - 여러 동작을 종료한다.(여러 축 종료가능)
+
+p131) 3.14.8 KillExt
+                 - 감속 프로파일을 사용해 모션을 종료하고 종료이유를 정의함
+                 - object.KillExt(Axis.axis, int reason);
+                 - reason은 축을 비활성화하는 이유를 정의하는 정수, 지정된 값은 MERR에 저장되어 비활성화 된 모터의 상태를 수정한다.
+                 - 직접 reason을 설정하는 경우 해당 오류로 차단된 모터는 일반 적인 오류가 생겨 차단된 모터랑 상태가 동일시 된다.
+
+p132) 3.14.9 Break
+                 - object.Break(Axis.axis)
+                 - 모선을 즉시 종료하고 다음 모션으로의 부드러운 3차 전환 프로파일을 제공
+                 - break 명령을 실행하면 감속 프로파일 없이 즉시 모션 종료
+                 - 다음 모션이 동일한 모션 대기열에 계획 될 때까지 현재 모션이 대신 계속되야 break 명령 실행 됨
+                 - 모션 큐에 대기 모션이 없으면 중단 명령이 즉시 실행 X, 다음 동작이 계획되기 전에 동작이 완료되면 효과 X
+ 
+p133) 3.14.10 BreakM
+                 - object.BreakM(Axis[].axis)
+                 - 여러 동작을 즉시 종료하고 다음 동작으로의 부드러운 전환 제공
+                 - 나머지는 break와 동일
+p135) 3.15 Point-to-Point Motion Methods
+ 
+p135) 3.15.1 ToPoint
+                 - object.ToPoint(MotionFlags flags, Axis.axis, double point)
+                 - flags --> ACSC_AMF_WAIT: 모션을 계획하되 Go 메소드가 실행될 때까지 시작하지 말라
+                               ACSC_AMF_RELATIVE: Point 값은 이전 동작의 끝점을 기준으로 하고, 플래그가 지정되지 않으면 절대좌표를 지정한다.
+                 - point 는 대상 점의 좌표
+                 - 이 명령은 필요한 모션 속도로 실행되고 0의 속도로 종료
+
+p136) 3.15.2 ToPointM
+                 - object.ToPointM(MotionFlags flags, Axis[] axes,double[] point)
+                 - flags --> ACSC_AMF_WAIT: 모션을 계획하되 Go 메소드가 실행될 때까지 시작하지 말라
+                               ACSC_AMF_RELATIVE: Point 값은 이전 동작의 끝점을 기준으로 하고 , 지정되지 않으면 절대좌표를 지정
+                               ACSC_AMF_MAXIMUM: 읽고 있는 축의 모션 매개변수를 쓰지 않고 관련축의 최대 허용 모션 속도, 가속, 감속 및 저크를 계산
+                 - 단일 축은 이 명령어 X
+
+p138) 3.15.3 ExtToPoint 
+                - object.ExtToPoint(Motion Flags flag,Axis.axis, double point, double velocity, double endVelocity);
+                - flags --> ACSC_AMF_WAIT : go메소드 나와야 시작
+                              ACSC_AMF_RELATIVE: 동작끝의 point기준, 지정X -> 절대좌표
+                              ACSC_AMF_VELOCITY: 기본 속도 대신 velocity인수로 지정된 속도 사용
+                              ACSC_AMF_ENDVELOCITY: 모션이 EndVelocity 인수에 의해 지정된 속도로 끝점에 도달
+                - double velocity: ACSC_AMF_VELOCITY 플래그가 지정 되었을 때만 매개변수 사용
+                - endVelocity : 최종 지점의 모션 속도가 지정, 만약 지정X --> 속도 =0
+
+p139) 3.1.5.4 ExtToPointM
+                - object.ExtToPointM(MotionFlags flag, Axis[] axis,double[] point, double velocity,double EndVelocity)
+
+p141) 3.16 Track Motion Control Method
+
+p142) 3.16.1 Track -단일 축 동작을 시작
+	   - object.Track(MotionFlags flag,Axis.axis)
+
+                           ACSC_AMF_VELOCITY: 기본속도 대신 Velocity 인수로 지정된 속도를 사용
+
+p146~150) 3.18 Slaved Motion Methods
+
+
+p151~154) MultiPoint ->PointM과 의 차이 모르겠음
+
+p154~164) Arbitary Path Motion Methods 임의 모션 경로
+                 - Spline --> 단일 축 스플라인 동작을 시작하고 모션 
+                 - 스플라인이란 특정점 3개를 통해 3차 곡섬(함수)를 만드는 것
+
+P164) Segmented Motion Methods
+
+p165) Segment motion 
+	- object.Segment(MotionFlags flags, Axis[].axis,double[] point)  flags= 옵션 같은 개념
+	- 다중 축 분할 동작을 시작
+	- 
+
+p170) 3.22.3 Sgment Line
+	- object.SegmentLine(MotionFlags flag,Axis[].axis,double[] point,double velocity,double endvelocity,string values, string variables, int index, string masks)
+	- 현재 지점에서 시작해 대상 지점에서 끝나는 분할된 동작에 선형 세그먼트를 추가
+
+p172) 3.22.4Extended SegmentArc1
+	- object.ExtendedSegmentArc1(MotionFlags flags, Axis[] axes, double[] center, double[] finalPoint, RotationDirection rotation, double velocity, 
+                                                                                    double endVelocity, double time, string values, string variables, int index, string masks)
+	- 분할된 동작에 호 세그먼트를 추가하고 중심점의 좌표, 최종 점의 좌표 및 회전 방향을 지정
+
+p175) 3.22.5 ExtendedSegmentArc2
+	- 분할된 동작에 호 세그먼트를 추가해 중심점의 좌표와 회전각을 지정
+
+p178) 3.22.6 Stopper
+	- 세그먼트 모션간에 부드러운 전환을 제공함
+            - object.Stopper(Axis[].axis)
+
+p180) Projection
+	- 분할된 동작에 대한 투영 행렬을 설정한다.
+	- 투영에 대한 자세한 내용은 ACSPL+ 프로그래머 가이드 참조
+
+p182) 4.0.1 혼합 세그먼트 모션 함수 (Blended Segment Motion)
+	- 혼합은 확장과 달리 미리보기 기능을 제공하지 않는다.
+	- 혼합과 확장 모두 복잡한 다축 궤적을 처리하고 세그먼트 사이의 모서리를 매끄럽게 하기위한 것이지만 둘은 방식이 다름
+	- XSEG(Extended Segmented Motion)를 통해 정의된 축 제한과 정의된 정확도 내에서 최고의 저리량을 달성 할 수 있음
+	- BSEG(Blended Segmented Motion)를 사용하면 정의된 타이밍 제약으로 궤적을 따라 이동 가능
+	- 함수 자체는 이동을 지정하지 않으므로 생성된 모션은 첫번째 세그먼트가 지정된 후에만 시작
+
+p184) 4.0.2 BlendedLine
+
+p188) 4.0.4 BlendedArc2
+	- 중심점의 좌표와 회전 각 지정
+
+p190) 4.1 Points and Segments Mnipulation Methods (점 및 선분 조작방법)
+	- object.AddPoint(Axis.axis, double point) --> 단일축 다중점 또는 스플라인 동작에 점을 추가
+	- object.AddPointM(Axis[].axis, double[] axis) --> 다중 축 다중 점 또는 스플라인 동작에 점을 추가
+	- object.ExtAddPoint(Axis.axis, double point, double rate) --> 단일 축 다점 또는 스플라인 동작에 점을 추가하고 특정 속도 또는 동작 시간을 지정
+	- object.ExtAddPointM(Axis[].axis, double[] point, double[] rate)
+	- object.EndSequence(Axis axis) --> 컨트롤러에 현재 단일 축 동작에 대해 더이상 점이 지정되지 않을 것임을 알림
+	- object.EndSequence(Axis[] axes) --> 다중 축 더이상 지정되지 않음
+
+p198) 4.2 데이터 수집 방법
+	4.2.1 DataCollectionExt --> 데이터 수집 시작
+		- object.DataCollectionExt(DataCollectionFlags flags, [Axis axis,] string array, int nSample, double period, string vars)
+		- Flag 종류 =  ACSC_DCF_SYNC -->  동기적으로 데이터 수집을 시작
+			      ACSC_DCF_ WAIT --> go 메서드가 호출될때까지 시작 금지
+			      ACSC_DCF_TEMPORAL --> 임시 데이터 수집, 샘플링 기간은 수집 시간에 따라 자동 계산
+			      ACSC_DCF_CYCLIC --> 컬렉션 배열을 순환 버퍼로 사용하고 무한히 계속되고, Array가 계속되면 새로운 샘플이 가장 오래된 것을 덮어씌운다.
+		- string array = 수집된 샘플을 저장하는 배열의 이름 ( 이 이름은 ACSPL+과 선언된 변수에 의해 전역 변수로 선언되어야 함)
+		- nSample = 수집할 샘플 수
+		- period = 샘플링 기간
+			     ACSC_DCF_TEMPORAL플래그 지정 --> 이 매개변수는 최소 기간을 정의
+		- vars = 변수 이름이 배열을 지정하는 경우 배열의 한 요소를 지정하려면 이름에 인덱스를 추가
+
+
+p200) 4.2.2 StopCollect
+	- object.StopCollect() --> 데이터 수집 중지
+
+p201) 4.3 상태 보고 방법
+	- GetMoterState --> 현재 모터 상태 검색
+	- GetAxisState --> 현재 축 상태 검색
+	- GetIndexState --> 인덱스 및 마크 변수의 현재 상태 검색
+	- ResetIndexState --> 인덱스/마크 상태의 지정된 비트를 재설정
+	- GetProgramState --> 프로그램 버퍼의 현재 상태 검색
+
+p205) 입출력 액세스 방법
+
+p217) 4.5 Safety Control Methods
+	- 오류, 안전 제어 방법
+
+p231) 4.6 Wait-for-Condition Methods - 대기 방법
+	- WaitMotionEnd --> 모션이 끝날 때까지 기다린다.
+	- 이외의 여러가지 종료 방법이 있다.
+
+p236) 4.7 Event and Interrupt Handling Methods      
+	- 인터럽트란 컴퓨터에 에러가 나도 계속 task를 수행할 수 있도록 하는 것
+	- 이벤트 및 인터럽트 처리방법은 다음과 같다.
+	- object.EnableEvent(interrupts flags) --> 지정된 조건에 대한 이벤트 생성을 활성화
+	- object.DisableEvent(interrupts flags) --> 지정된 조건에 대한 이벤트 생성 비활성화
+	- object.SetInterruptMask(interrupt interrupts,Uint32 mask) --> 지정된 인터럽트에 대한 마스크 설정
+	- object.GetInterruptMask(interrupts interrupt) --> 매서드는 지정된 인터럽트에 대한 마스크 검색
+	
+
+p241) 4.8 Variables Management Methods
+	 4.8.1) 변수 선언 --> 전역 변수를 선언한다.
+	- object.DeclareVariable(AcspVariableType type,string name)
+	-  AcspVariableType type은 변수의 유형, 정수 = ACSC_INT_TYPE
+					   실수 = ACSC_REAL_TYPE
+	- 지정된 유형으로 지정된 유형의 이름으로 지정된 영구 전역 변수를 생성
+	- 영구 전역 변수의 수명은 프로그램 버퍼와 연결되어 있지 않다.
+	- 영구 변수는 프로그램 버퍼의 모든 변경 사항을 유지하며 ClearVariables 메서드로만 지울 수 있다.
+
+p242) 4.8.2) ClearVariables
+	- 모든 영구 전역 변수를 삭제한다.
+	- object.ClearVariables() <--매개변수, return 둘다 없다.
+
+        4.9) 서비스 함수들
+	- GetLogData --> 펌웨어 로그의 데이터를 검색
+	- GetFirmwareVersion --> 컨트롤러의 버전 검색
+	- GetSerialNumber --> 컨트롤러 일련 번호를 검색
+	- Sysinfo --> 사례적인 시스템 정보를 검색
+	- GetBuffersCount --> 사용가능한 ACSPL+ 프로그래밍 버퍼의 수를 반환
+	- GetAxesCount --> 사용 가능한 축의 수를 반환
+	- GetDBufferIndex --> D-Buffer의 인덱스를 검색
+	
+p246) 4.10) Error Diagnostics Methods - 오류 진단 방법
+	- 모터 비활성화 이유, 지정된 축의 마지막으로 실행된 모션의 종료 코드 검색
+	- 지정된 버퍼에서 발생한 마지막 프로그램 오류의 오류코드를 검색
+
+p248) 4.11 Position Event Generation (PEG) Methods --> 위치 이벤트의 일반적인 함수들
+
+p255) 4.12 Application SAVE/Load Methods
+
+p263) 비상 정지 방법
+	- object.RegisterEmergencyStop(); --> 비상 정지 기능 활성화
+	- 이 기능을 활성화 하면 오른쪽 하단 모서리에 비상 정지 버튼 아이콘이 나타난다.
+
+p264) 4.14.2)비상 정지 등록 해제
+	- object.UnregisterEmergencyStop(); --> 비상 정지 등록 해제
+	- 비상 정지 버튼을 아무리 눌러도 애플리케이션은 응답하지 않고 등록된 다른 응용프로그램이 없으면 버튼이 사라진다.
+
+p266) 4.16 Host-Controller File Operations
+	- 호스트 pc파일은 컨트롤러의 비휘발성 메모리에 복사할 수 있고 사용자 파일은 다음에서 삭제할 수 있다.
+
+p271) 5 Enumerations 열거
+
+p286) 6. 이벤트
+	- 인터럽트에 대한 이벤트
+
+p287) 7. 오류 처리
+	- try-catch문 사용
+  
+  
